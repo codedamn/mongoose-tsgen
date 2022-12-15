@@ -9,119 +9,123 @@ import mongoose from "mongoose";
 
 /**
  * Lean version of User2AddressDocument
- * 
+ *
  * This has all Mongoose getters & functions removed. This type will be returned from `User2Document.toObject()`.
  * ```
  * const user2Object = user2.toObject();
  * ```
  */
 export type User2Address = {
-city: string;
-}
+  city: string;
+};
 
 /**
  * Lean version of User2Document
- * 
+ *
  * This has all Mongoose getters & functions removed. This type will be returned from `User2Document.toObject()`. To avoid conflicts with model names, use the type alias `User2Object`.
  * ```
  * const user2Object = user2.toObject();
  * ```
  */
-export type User2 = {
-_id: number;
-lastOnlineAt?: Date;
-updatedAt?: Date;
-createdAt?: Date;
-address: User2Address;
-}
+export type User2Type = {
+  _id: number;
+  lastOnlineAt?: Date;
+  updatedAt?: Date;
+  createdAt?: Date;
+  address: User2Address;
+};
 
 /**
  * Lean version of User2Document (type alias of `User2`)
- * 
+ *
  * Use this type alias to avoid conflicts with model names:
  * ```
  * import { User2 } from "../models"
  * import { User2Object } from "../interfaces/mongoose.gen.ts"
- * 
+ *
  * const user2Object: User2Object = user2.toObject();
  * ```
  */
-export type User2Object = User2
+export type User2ObjectType = User2Type;
 
 /**
  * Mongoose Query type
- * 
+ *
  * This type is returned from query functions. For most use cases, you should not need to use this type explicitly.
  */
-export type User2Query = mongoose.Query<any, User2Document, User2Queries> & User2Queries
+export type User2QueryType = mongoose.Query<any, User2DocumentType, User2QueriesType> &
+  User2QueriesType;
 
 /**
  * Mongoose Query helper types
- * 
+ *
  * This type represents `User2Schema.query`. For most use cases, you should not need to use this type explicitly.
  */
-export type User2Queries = {
-}
+export type User2QueriesType = {};
 
-export type User2Methods = {
-}
+export type User2MethodsType = {};
 
-export type User2Statics = {
-}
+export type User2StaticsType = {};
 
 /**
  * Mongoose Model type
- * 
+ *
  * Pass this type to the Mongoose Model constructor:
  * ```
  * const User2 = mongoose.model<User2Document, User2Model>("User2", User2Schema);
  * ```
  */
-export type User2Model = mongoose.Model<User2Document, User2Queries> & User2Statics
+export type User2ModelType = mongoose.Model<User2DocumentType, User2QueriesType> & User2StaticsType;
 
 /**
  * Mongoose Schema type
- * 
+ *
  * Assign this type to new User2 schema instances:
  * ```
  * const User2Schema: User2Schema = new mongoose.Schema({ ... })
  * ```
  */
-export type User2Schema = mongoose.Schema<User2Document, User2Model, User2Methods, User2Queries>
+export type User2SchemaType = mongoose.Schema<
+  User2DocumentType,
+  User2ModelType,
+  User2MethodsType,
+  User2QueriesType
+>;
 
 /**
  * Mongoose Document type
- * 
+ *
  * Pass this type to the Mongoose Model constructor:
  * ```
  * const User2 = mongoose.model<User2Document, User2Model>("User2", User2Schema);
  * ```
  */
-export type User2AddressDocument = mongoose.Document<number> & {
-city: string;
-}
+export type User2AddressDocumentType = mongoose.Document<number> & {
+  city: string;
+};
 
 /**
  * Mongoose Document type
- * 
+ *
  * Pass this type to the Mongoose Model constructor:
  * ```
  * const User2 = mongoose.model<User2Document, User2Model>("User2", User2Schema);
  * ```
  */
-export type User2Document = mongoose.Document<number, User2Queries> & User2Methods & {
-_id: number;
-lastOnlineAt?: Date;
-updatedAt?: Date;
-createdAt?: Date;
-address: User2AddressDocument;
-}
+export type User2DocumentType = mongoose.Document<number, User2QueriesType> &
+  User2MethodsType & {
+    _id: number;
+    lastOnlineAt?: Date;
+    updatedAt?: Date;
+    createdAt?: Date;
+    address: User2AddressDocumentType;
+  };
 
 /**
  * Check if a property on a document is populated:
  * ```
  * import { IsPopulated } from "../interfaces/mongoose.gen.ts"
- * 
+ *
  * if (IsPopulated<UserDocument["bestFriend"]>) { ... }
  * ```
  */
@@ -130,26 +134,26 @@ export function IsPopulated<T>(doc: T | mongoose.Types.ObjectId): doc is T {
 }
 
 /**
- * Helper type used by `PopulatedDocument`. Returns the parent property of a string 
+ * Helper type used by `PopulatedDocument`. Returns the parent property of a string
  * representing a nested property (i.e. `friend.user` -> `friend`)
  */
 type ParentProperty<T> = T extends `${infer P}.${string}` ? P : never;
 
 /**
-* Helper type used by `PopulatedDocument`. Returns the child property of a string 
-* representing a nested property (i.e. `friend.user` -> `user`).
-*/
+ * Helper type used by `PopulatedDocument`. Returns the child property of a string
+ * representing a nested property (i.e. `friend.user` -> `user`).
+ */
 type ChildProperty<T> = T extends `${string}.${infer C}` ? C : never;
 
 /**
-* Helper type used by `PopulatedDocument`. Removes the `ObjectId` from the general union type generated 
-* for ref documents (i.e. `mongoose.Types.ObjectId | UserDocument` -> `UserDocument`)
-*/
-type PopulatedProperty<Root, T extends keyof Root> = Omit<Root, T> & { 
-  [ref in T]: Root[T] extends mongoose.Types.Array<infer U> ? 
-    mongoose.Types.Array<Exclude<U, mongoose.Types.ObjectId>> :
-    Exclude<Root[T], mongoose.Types.ObjectId> 
-}
+ * Helper type used by `PopulatedDocument`. Removes the `ObjectId` from the general union type generated
+ * for ref documents (i.e. `mongoose.Types.ObjectId | UserDocument` -> `UserDocument`)
+ */
+type PopulatedProperty<Root, T extends keyof Root> = Omit<Root, T> & {
+  [ref in T]: Root[T] extends mongoose.Types.Array<infer U>
+    ? mongoose.Types.Array<Exclude<U, mongoose.Types.ObjectId>>
+    : Exclude<Root[T], mongoose.Types.ObjectId>;
+};
 
 /**
  * Populate properties on a document type:
@@ -161,31 +165,21 @@ type PopulatedProperty<Root, T extends keyof Root> = Omit<Root, T> & {
  * }
  * ```
  */
-export type PopulatedDocument<
-DocType,
-T
-> = T extends keyof DocType
-? PopulatedProperty<DocType, T> 
-: (
-    ParentProperty<T> extends keyof DocType
-      ? Omit<DocType, ParentProperty<T>> &
-      {
-        [ref in ParentProperty<T>]: (
-          DocType[ParentProperty<T>] extends mongoose.Types.Array<infer U> ? (
-            mongoose.Types.Array<
-              ChildProperty<T> extends keyof U 
-                ? PopulatedProperty<U, ChildProperty<T>> 
-                : PopulatedDocument<U, ChildProperty<T>>
-            >
-          ) : (
-            ChildProperty<T> extends keyof DocType[ParentProperty<T>]
-            ? PopulatedProperty<DocType[ParentProperty<T>], ChildProperty<T>>
-            : PopulatedDocument<DocType[ParentProperty<T>], ChildProperty<T>>
-          )
-        )
-      }
-      : DocType
-  )
+export type PopulatedDocument<DocType, T> = T extends keyof DocType
+  ? PopulatedProperty<DocType, T>
+  : ParentProperty<T> extends keyof DocType
+  ? Omit<DocType, ParentProperty<T>> & {
+      [ref in ParentProperty<T>]: DocType[ParentProperty<T>] extends mongoose.Types.Array<infer U>
+        ? mongoose.Types.Array<
+            ChildProperty<T> extends keyof U
+              ? PopulatedProperty<U, ChildProperty<T>>
+              : PopulatedDocument<U, ChildProperty<T>>
+          >
+        : ChildProperty<T> extends keyof DocType[ParentProperty<T>]
+        ? PopulatedProperty<DocType[ParentProperty<T>], ChildProperty<T>>
+        : PopulatedDocument<DocType[ParentProperty<T>], ChildProperty<T>>;
+    }
+  : DocType;
 
 /**
  * Helper types used by the populate overloads
@@ -198,17 +192,33 @@ type Modify<T, R> = Omit<T, keyof R> & R;
  */
 declare module "mongoose" {
   interface Query<ResultType, DocType, THelpers = {}> {
-    populate<T extends string>(path: T, select?: string | any, model?: string | Model<any, THelpers>, match?: any): Query<
-      ResultType extends Array<DocType> ? Array<PopulatedDocument<Unarray<ResultType>, T>> : (ResultType extends DocType ? PopulatedDocument<Unarray<ResultType>, T> : ResultType),
+    populate<T extends string>(
+      path: T,
+      select?: string | any,
+      model?: string | Model<any, THelpers>,
+      match?: any
+    ): Query<
+      ResultType extends Array<DocType>
+        ? Array<PopulatedDocument<Unarray<ResultType>, T>>
+        : ResultType extends DocType
+        ? PopulatedDocument<Unarray<ResultType>, T>
+        : ResultType,
       DocType,
       THelpers
-    > & THelpers;
+    > &
+      THelpers;
 
-    populate<T extends string>(options: Modify<PopulateOptions, { path: T }> | Array<PopulateOptions>): Query<
-      ResultType extends Array<DocType> ? Array<PopulatedDocument<Unarray<ResultType>, T>> : (ResultType extends DocType ? PopulatedDocument<Unarray<ResultType>, T> : ResultType),
+    populate<T extends string>(
+      options: Modify<PopulateOptions, { path: T }> | Array<PopulateOptions>
+    ): Query<
+      ResultType extends Array<DocType>
+        ? Array<PopulatedDocument<Unarray<ResultType>, T>>
+        : ResultType extends DocType
+        ? PopulatedDocument<Unarray<ResultType>, T>
+        : ResultType,
       DocType,
       THelpers
-    > & THelpers;
+    > &
+      THelpers;
   }
 }
-

@@ -25,7 +25,7 @@ export const replaceModelTypes = (
     // methods
     if (Object.keys(methods).length > 0) {
       sourceFile
-        ?.getTypeAlias(`${modelName}Methods`)
+        ?.getTypeAlias(`${modelName}MethodsType`)
         ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
         ?.getChildrenOfKind(SyntaxKind.PropertySignature)
         .forEach(prop => {
@@ -40,7 +40,7 @@ export const replaceModelTypes = (
     // statics
     if (Object.keys(statics).length > 0) {
       sourceFile
-        ?.getTypeAlias(`${modelName}Statics`)
+        ?.getTypeAlias(`${modelName}StaticsType`)
         ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
         ?.getChildrenOfKind(SyntaxKind.PropertySignature)
         .forEach(prop => {
@@ -55,7 +55,7 @@ export const replaceModelTypes = (
     // queries
     if (Object.keys(query).length > 0) {
       sourceFile
-        ?.getTypeAlias(`${modelName}Queries`)
+        ?.getTypeAlias(`${modelName}QueriesType`)
         ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
         ?.getChildrenOfKind(SyntaxKind.PropertySignature)
         .forEach(prop => {
@@ -71,7 +71,7 @@ export const replaceModelTypes = (
     const virtualNames = Object.keys(virtuals);
     if (virtualNames.length > 0) {
       const documentProperties = sourceFile
-        ?.getTypeAlias(`${modelName}Document`)
+        ?.getTypeAlias(`${modelName}DocumentType`)
         ?.getFirstChildByKind(SyntaxKind.IntersectionType)
         ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
         ?.getChildrenOfKind(SyntaxKind.PropertySignature);
@@ -79,7 +79,7 @@ export const replaceModelTypes = (
       const leanProperties =
         parser.getShouldLeanIncludeVirtuals(schemas[modelName]) &&
         sourceFile
-          ?.getTypeAlias(`${modelName}`)
+          ?.getTypeAlias(`${modelName}Type`)
           ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
           ?.getChildrenOfKind(SyntaxKind.PropertySignature);
 
@@ -127,13 +127,13 @@ export const replaceModelTypes = (
     // TODO: this section is almost identical to the virtual property section above, refactor
     if (comments.length > 0) {
       const documentProperties = sourceFile
-        ?.getTypeAlias(`${modelName}Document`)
+        ?.getTypeAlias(`${modelName}DocumentType`)
         ?.getFirstChildByKind(SyntaxKind.IntersectionType)
         ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
         ?.getChildrenOfKind(SyntaxKind.PropertySignature);
 
       const leanProperties = sourceFile
-        ?.getTypeAlias(`${modelName}`)
+        ?.getTypeAlias(`${modelName}Type`)
         ?.getFirstChildByKind(SyntaxKind.TypeLiteral)
         ?.getChildrenOfKind(SyntaxKind.PropertySignature);
 
@@ -199,31 +199,31 @@ export const getSchemaTypes = ({ schema, modelName }: { schema: any; modelName: 
 
   // add type alias to modelName so that it can be imported without clashing with the mongoose model
   schemaTypes += templates.getObjectDocs(modelName);
-  schemaTypes += `\nexport type ${modelName}Object = ${modelName}\n\n`;
+  schemaTypes += `\nexport type ${modelName}ObjectType = ${modelName}Type\n\n`;
 
   schemaTypes += templates.getQueryDocs();
-  schemaTypes += `\nexport type ${modelName}Query = mongoose.Query<any, ${modelName}Document, ${modelName}Queries> & ${modelName}Queries\n\n`;
+  schemaTypes += `\nexport type ${modelName}QueryType = mongoose.Query<any, ${modelName}DocumentType, ${modelName}QueriesType> & ${modelName}QueriesType\n\n`;
 
   schemaTypes += templates.getQueryHelpersDocs(modelName);
-  schemaTypes += `\nexport type ${modelName}Queries = {\n`;
+  schemaTypes += `\nexport type ${modelName}QueriesType = {\n`;
   schemaTypes += parser.parseFunctions(schema.query ?? {}, modelName, "query");
   schemaTypes += "}\n";
 
-  schemaTypes += `\nexport type ${modelName}Methods = {\n`;
+  schemaTypes += `\nexport type ${modelName}MethodsType = {\n`;
   schemaTypes += parser.parseFunctions(schema.methods, modelName, "methods");
   schemaTypes += "}\n";
 
-  schemaTypes += `\nexport type ${modelName}Statics = {\n`;
+  schemaTypes += `\nexport type ${modelName}StaticsType = {\n`;
   schemaTypes += parser.parseFunctions(schema.statics, modelName, "statics");
   schemaTypes += "}\n\n";
 
-  const modelExtend = `mongoose.Model<${modelName}Document, ${modelName}Queries>`;
+  const modelExtend = `mongoose.Model<${modelName}DocumentType, ${modelName}QueriesType>`;
 
   schemaTypes += templates.getModelDocs(modelName);
-  schemaTypes += `\nexport type ${modelName}Model = ${modelExtend} & ${modelName}Statics\n\n`;
+  schemaTypes += `\nexport type ${modelName}ModelType = ${modelExtend} & ${modelName}StaticsType\n\n`;
 
   schemaTypes += templates.getSchemaDocs(modelName);
-  schemaTypes += `\nexport type ${modelName}Schema = mongoose.Schema<${modelName}Document, ${modelName}Model, ${modelName}Methods, ${modelName}Queries>\n\n`;
+  schemaTypes += `\nexport type ${modelName}SchemaType = mongoose.Schema<${modelName}DocumentType, ${modelName}ModelType, ${modelName}MethodsType, ${modelName}QueriesType>\n\n`;
 
   return schemaTypes;
 };
@@ -263,7 +263,7 @@ export const generateTypes = ({
         schema,
         modelName,
         isDocument: false,
-        header: templates.getLeanDocs(modelName) + `\nexport type ${modelName} = {\n`,
+        header: templates.getLeanDocs(modelName) + `\nexport type ${modelName}Type = {\n`,
         footer: "}",
         noMongoose,
         shouldLeanIncludeVirtuals
@@ -281,7 +281,7 @@ export const generateTypes = ({
         _idType = parser.convertBaseTypeToTs("_id", (schema as any).tree._id, true, noMongoose);
       }
 
-      const mongooseDocExtend = `mongoose.Document<${_idType ?? "never"}, ${modelName}Queries>`;
+      const mongooseDocExtend = `mongoose.Document<${_idType ?? "never"}, ${modelName}QueriesType>`;
 
       let documentInterfaceStr = "";
       documentInterfaceStr += getSchemaTypes({ schema, modelName });
@@ -291,7 +291,7 @@ export const generateTypes = ({
         isDocument: true,
         header:
           templates.getDocumentDocs(modelName) +
-          `\nexport type ${modelName}Document = ${mongooseDocExtend} & ${modelName}Methods & {\n`,
+          `\nexport type ${modelName}DocumentType = ${mongooseDocExtend} & ${modelName}MethodsType & {\n`,
         footer: "}",
         shouldLeanIncludeVirtuals
       });

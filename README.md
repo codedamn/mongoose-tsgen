@@ -9,16 +9,18 @@ A plug-n-play Typescript generator for Mongoose.
 <!-- [![Downloads/week](https://img.shields.io/npm/dw/mongoose-tsgen.svg)](https://npmjs.org/package/mongoose-tsgen) -->
 
 <!-- toc -->
-
-- [Motivation](#motivation)
-- [Features](#features)
-- [Compatibility](#compatibility)
-- [Installation](#installation)
-- [The Gist](#the-gist)
-- [Usage](#usage)
-- [Example](#example)
-- [Known Issues](#known-issues)
-- [Development](#Development)
+* [mongoose-tsgen](#mongoose-tsgen)
+* [Motivation](#motivation)
+* [Features](#features)
+* [Compatibility](#compatibility)
+* [Installation](#installation)
+* [install with npm or yarn](#install-with-npm-or-yarn)
+* [install mongoose-tsgen v7.1.3 for mongoose v5.10.19 (see table above for compatibility)](#install-mongoose-tsgen-v713-for-mongoose-v51019-see-table-above-for-compatibility)
+* [install with yarn](#install-with-yarn)
+* [The Gist](#the-gist)
+* [Usage](#usage)
+* [Example](#example)
+* [run mongoose-tsgen](#run-mongoose-tsgen)
 <!-- tocstop -->
 
 # Motivation
@@ -119,49 +121,6 @@ Note that this practice is well documented online, I've found the following two 
 # Usage
 
 <!-- commands -->
-
-## `mtgen [MODEL_PATH]`
-
-Generate a Typescript file containing Mongoose Schema typings.
-
-> If you run into unknown type issues, [check your Mongoose version](#mongoose-version). For Mongoose v5.11+, ensure you have removed the deprecated community typings `@types/mongoose`.
-
-```
-USAGE
-  $ mtgen [MODEL_PATH]
-
-OPTIONS
-  -c, --config=config     [default: ./] Path of `mtgen.config.json` or its root folder. CLI flag
-                          options will take precendence over settings in `mtgen.config.json`.
-
-  -d, --dry-run           Print output rather than writing to file.
-
-  -h, --help              Show CLI help
-
-  -i, --imports=imports   Custom import statements to add to the output file. Useful if you use
-                          third-party types in your mongoose schema definitions. For multiple imports,
-                          specify this flag more than once.
-
-  -o, --output=output     [default: ./src/interfaces] Path of output file to write generated typings.
-                          If a folder path is passed, the generator will create a `mongoose.gen.ts` file
-                          in the specified folder.
-
-  -p, --project=project   [default: ./] Path of `tsconfig.json` or its root folder.
-
-  --debug                 Print debug information if anything isn't working
-
-  --no-format             Disable formatting generated files with prettier.
-
-  --no-mongoose           Don't generate types that reference mongoose (i.e. documents). Replace ObjectId with
-                          string.
-
-  --no-populate-overload  Disable augmenting mongoose with Query.populate overloads (the overloads narrow
-                          the return type of populated documents queries).
-```
-
-Specify the directory of your Mongoose schema definitions using `MODEL_PATH`. If left blank, all sub-directories will be searched for `models/*.ts` (ignores `index.ts` files). Files found are expected to export a Mongoose model. 
-
-_See code: [src/index.ts](https://github.com/francescov1/mongoose-tsgen/blob/master/src/index.ts)_
 
 <!-- commandsstop -->
 

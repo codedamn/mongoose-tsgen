@@ -1,49 +1,50 @@
-import mongoose, { Schema, model } from 'mongoose';
-import { DeviceDocument, DeviceModel, HomeDocument, HomeModel, HomeSchema, DeviceSchema } from './device.gen';
+import mongoose, { Schema, model } from "mongoose";
+import {
+  DeviceDocumentType,
+  DeviceModelType,
+  DeviceSchemaType,
+  HomeDocumentType,
+  HomeModelType,
+  HomeSchemaType
+} from "./device.gen";
 
-const homeSchema: HomeSchema = new Schema(
+const homeSchema: HomeSchemaType = new Schema(
   {
     homeId: String,
-    homeName: String,
+    homeName: String
   },
   {
-      _id: false
+    _id: false
   }
 );
 
-homeSchema.virtual("status")
-    .get(function(this: HomeDocument): string {
-        return "available";
-    });
+homeSchema.virtual("status").get(function (this: HomeDocumentType): string {
+  return "available";
+});
 
-export const home = mongoose.model<HomeDocument, HomeModel>('Home', homeSchema);
+export const home = mongoose.model<HomeDocumentType, HomeModelType>("Home", homeSchema);
 
-const DeviceSchema: DeviceSchema = new Schema({
+const DeviceSchema: DeviceSchemaType = new Schema({
   name: String,
-  home: home.schema,
+  home: home.schema
 });
 
 DeviceSchema.methods = {
-    test() {
-        return "hi";
-    }
-}
+  test() {
+    return "hi";
+  }
+};
 
 DeviceSchema.statics = {
-    test() {
-        return "hi";
-    }
-}
+  test() {
+    return "hi";
+  }
+};
 
 // multiple versions of mongoose model init
 
-export const device = mongoose.model<DeviceDocument, DeviceModel>('Device', DeviceSchema);
-export const device2 = mongoose.model('Device2', DeviceSchema);
-export const device3 = mongoose.model<
-    DeviceDocument,
-    DeviceModel
->('Device3', DeviceSchema);
-export const device4 = model('Device4', 
-    DeviceSchema
-);
-export default mongoose.model<DeviceDocument, DeviceModel>('DeviceDefault', DeviceSchema);
+export const device = mongoose.model<DeviceDocumentType, DeviceModelType>("Device", DeviceSchema);
+export const device2 = mongoose.model("Device2", DeviceSchema);
+export const device3 = mongoose.model<DeviceDocumentType, DeviceModelType>("Device3", DeviceSchema);
+export const device4 = model("Device4", DeviceSchema);
+export default mongoose.model<DeviceDocumentType, DeviceModelType>("DeviceDefault", DeviceSchema);

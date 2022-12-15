@@ -49,15 +49,15 @@ export const convertFuncSignatureToType = (
   const [, params, returnType] = funcSignature.match(/\((?:this: \w*(?:, )?)?(.*)\) => (.*)/) ?? [];
   let type;
   if (funcType === "query") {
-    type = `(this: ${modelName}Query${
+    type = `(this: ${modelName}QueryType${
       params?.length > 0 ? ", " + params : ""
-    }) => ${modelName}Query`;
+    }) => ${modelName}QueryType`;
   } else if (funcType === "methods") {
-    type = `(this: ${modelName}Document${params?.length > 0 ? ", " + params : ""}) => ${
+    type = `(this: ${modelName}DocumentType${params?.length > 0 ? ", " + params : ""}) => ${
       returnType ?? "any"
     }`;
   } else {
-    type = `(this: ${modelName}Model${params?.length > 0 ? ", " + params : ""}) => ${
+    type = `(this: ${modelName}ModelType${params?.length > 0 ? ", " + params : ""}) => ${
       returnType ?? "any"
     }`;
   }
@@ -245,7 +245,7 @@ const parseChildSchemas = ({
       header += "\nexport ";
 
       if (isDocument) {
-        header += `type ${name}Document = `;
+        header += `type ${name}DocumentType = `;
         if (isSubdocArray) {
           header += "mongoose.Types.Subdocument";
         }
@@ -375,7 +375,7 @@ export const getParseKeyFn = (
       valType = "any";
       isOptional = isArrayOuterDefaultSetToUndefined ?? false;
     } else if (val._inferredInterfaceName) {
-      valType = val._inferredInterfaceName + (isDocument ? "Document" : "");
+      valType = val._inferredInterfaceName + (isDocument ? "DocumentType" : "");
     } else if (val.path && val.path && val.setters && val.getters) {
       // check for virtual properties
       // skip id property
@@ -410,8 +410,8 @@ export const getParseKeyFn = (
       }
 
       valType = isDocument ?
-        `${docRef}Document["_id"] | ${docRef}Document` :
-        `${docRef}["_id"] | ${docRef}`;
+        `${docRef}DocumentType["_id"] | ${docRef}DocumentType` :
+        `${docRef}Type["_id"] | ${docRef}Type`;
     } else {
       // _ids are always required
       if (key === "_id") isOptional = false;

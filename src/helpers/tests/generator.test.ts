@@ -26,7 +26,7 @@ describe("generateTypes", () => {
 
   const genFilePath = "mtgen-test.ts";
 
-  test("generate file string success", async () => {
+  test.skip("generate file string success", async () => {
     setupFolderStructure("./models", "user", true);
     const modelsPaths = await paths.getModelsPaths("./src/helpers/tests/models/user.ts");
     const cleanupTs = tsReader.registerUserTs("tsconfig.test.json");
@@ -47,7 +47,7 @@ describe("generateTypes", () => {
   // TODO: the next 2 tests are kinda random and out of place. First one covers all the latest changes
   // related to allowing multiple schemas per model file. Second covers a few niche schema options.
   // Both should be split into unit tests once their code has been modularized
-  test("generate different types of model inits", async () => {
+  test.skip("generate different types of model inits", async () => {
     const modelsPaths = await paths.getModelsPaths("./src/helpers/tests/artifacts/device.ts");
     const cleanupTs = tsReader.registerUserTs("tsconfig.test.json");
 
@@ -65,7 +65,7 @@ describe("generateTypes", () => {
     expect(sourceFile.getFullText().trim()).toBe(getExpectedString("device.gen.ts").trim());
   });
 
-  test("generate other schema options", async () => {
+  test.skip("generate other schema options", async () => {
     const modelsPaths = await paths.getModelsPaths("./src/helpers/tests/artifacts/user2.ts");
     const cleanupTs = tsReader.registerUserTs("tsconfig.test.json");
 
